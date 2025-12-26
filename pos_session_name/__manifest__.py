@@ -8,7 +8,7 @@
 
     'author': "Vishnu Sasikumar",
     'category': 'Point of Sale',
-    'version': '18.0.2.0.0',
+    'version': '18.0.3.0.0',
     'depends': ['base','point_of_sale'],
 
     'data': [],
