@@ -17,7 +17,7 @@
         'pos_session_name/static/src/xml/navbar_shopname.xml',
         'pos_session_name/static/src/css/style.css',
     ]},
-    'images': ['static/description/banner.png'],
+    'images': ['static/description/banner.jpeg'],
     'license':'LGPL-3',
     "price": "0.0",
     'installable': True,
