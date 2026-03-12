@@ -15,8 +15,9 @@ class ProductTemplate(models.Model):
             return 0
 
         location = warehouse.lot_stock_id
+        product_id = self.env['product.product'].search([('product_tmpl_id','=',self.id)],limit=1)
         quant = self.env['stock.quant'].search([
-            ('product_id', '=', self.id),
+            ('product_id', '=', product_id.id),
             ('location_id', '=', location.id),
         ])
         return sum(quant.mapped('available_quantity'))
