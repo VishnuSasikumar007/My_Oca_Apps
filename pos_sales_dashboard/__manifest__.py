@@ -39,6 +39,7 @@
     'data': [
         "views/dashboard_view.xml",
     ],
+    'images': ['static/description/banner.png'],
     'license': "LGPL-3",
     'installable': True,
     'application': True,
