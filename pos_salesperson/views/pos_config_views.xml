@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="pos_config_form_view_sales_person_inherit" model="ir.ui.view">
+        <field name="name">pos.config.form.view.sales.person.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+         <xpath expr="//setting[@id='other_devices']" position="after">
+
+             <setting id="salesperson_compulsory"
+               string="Mandatory Salesperson"
+               help="Enable this option to require selecting a salesperson and restrict selection to the specified users.">
+
+               <field name="salesperson_compulsory"/>
+
+               <div class="mt8" invisible="salesperson_compulsory != True">
+                <label for="salesperson_ids" string="Allowed Salespersons"/>
+                <field name="salesperson_ids"
+                 widget="many2many_tags"
+                 domain="[('company_id', '=', company_id)]"
+                 placeholder="Select salespersons..."
+                 required="salesperson_compulsory != False"/>
+             </div>
+
+         </setting>
+
+     </xpath>
+
+
+ </field>
+</record>
+</odoo>
