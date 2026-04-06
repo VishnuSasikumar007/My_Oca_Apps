@@ -19,6 +19,7 @@
             "vs_pos_salesperson/static/src/xml/PaymentScreenSalesperson.xml",
         ],
     },
+    "images": ['static/description/banner.jpeg'],
     "auto_install": False,
     "installable": True,
     "application": True,
