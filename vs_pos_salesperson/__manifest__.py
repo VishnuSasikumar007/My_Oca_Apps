@@ -13,10 +13,10 @@
     ],
     "assets": {
         "point_of_sale._assets_pos": [
-            "pos_salesperson/static/src/js/main.js",
-            "pos_salesperson/static/src/js/PaymentScreenInherit.js",
-            "pos_salesperson/static/src/js/PosModel.js",
-            "pos_salesperson/static/src/xml/PaymentScreenSalesperson.xml",
+            "vs_pos_salesperson/static/src/js/pos_order.js",
+            "vs_pos_salesperson/static/src/js/payment_screen.js",
+            "vs_pos_salesperson/static/src/js/pos_store.js",
+            "vs_pos_salesperson/static/src/xml/PaymentScreenSalesperson.xml",
         ],
     },
     "auto_install": False,

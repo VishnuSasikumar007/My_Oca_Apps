@@ -9,13 +9,9 @@ patch(PosOrder.prototype, {
         super.setup(vals);
 
         this.salesperson = false;
-
-        // ✅ 1. Restore from UI state (MOST IMPORTANT)
         if (this.uiState && this.uiState.salesperson) {
             this.salesperson = this.uiState.salesperson;
         }
-
-        // ✅ 2. Restore from backend (refresh case)
         if (!this.salesperson && vals.salesperson_id) {
             this.salesperson = {
                 id: Array.isArray(vals.salesperson_id)
