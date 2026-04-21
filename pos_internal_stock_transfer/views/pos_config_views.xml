@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="pos_config_form_view_send_stock_inherit" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+         <xpath expr="//setting[@id='other_devices']" position="after">
+
+             <setting id="allow_send_stock"
+               string="Allow send stock"
+               help="Enable this option to send stock from the current warehouse to another warehouse.">
+
+               <field name="allow_send_stock"/>
+
+               
+         </setting>
+
+     </xpath>
+
+
+ </field>
+</record>
+</odoo>

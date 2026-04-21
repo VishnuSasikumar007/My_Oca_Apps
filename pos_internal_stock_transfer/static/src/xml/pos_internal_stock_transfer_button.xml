@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sendstock_button" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension" owl="1">
+        <!-- Insert AFTER Customer button -->
+        <xpath expr="//SelectPartnerButton" position="after">
+            <t t-if="pos.config.allow_send_stock and !props.showRemainingButtons">
+                <button class="btn btn-secondary btn-lg"
+                    t-on-click="onClickSendStock">
+                    Send Stock
+                </button>
+            </t>
+
+        </xpath>
+
+    </t>
+
+</templates>
+
+
