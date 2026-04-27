@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- pos form view inherit -->
+    <record id="pos_config_form_view_shop_image_inherit" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+         <xpath expr="//setting[@id='other_devices']" position="after">
+
+             <setting id="pos_shop_image"
+                 string="POS Shop Image"
+                 help="Upload an image to display in the POS dashboard kanban view.">
+
+                <field name="pos_shop_image" widget="image"/>
+
+            </setting>
+
+     </xpath>
+ </field>
+</record>
+
+    <!-- pos kanban view inherit -->
+     <record id="pos_config_kanban_view_shop_image_inherit" model="ir.ui.view">
+        <field name="name">pos.config.kanban.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+         <xpath expr="//field[@name='name']" position="before">
+                <field name="pos_shop_image" widget="image" options="{'size': [140, 140], 'img_class': 'rounded-3'}" width="40"/>
+         </xpath>
+
+
+    </field>
+    </record>
+</odoo>
