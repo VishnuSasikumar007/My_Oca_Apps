@@ -55,6 +55,8 @@ class PosDashboard extends Component {
             store_comparison: [],
             showCustomerPopup: false,
             filtered_products: [],
+            top_cashiers: [],
+            showCashierPopup: false,
         });
 
         onWillStart(async () => {
@@ -129,6 +131,7 @@ class PosDashboard extends Component {
         this.state.closed_sessions = data.closed_sessions || 0;
         this.state.store_comparison = data.store_comparison || [];
         this.state.filtered_products = data.products;
+        this.state.top_cashiers = data.top_cashiers || [];
 
 
 // render charts if enabled
@@ -258,6 +261,18 @@ class PosDashboard extends Component {
 
     closeStoreRankingPopup(){
         this.state.showStoreRankingPopup = false;
+    }
+
+// ==============================
+// Cashier Ranking Popup
+// ==============================
+
+    openCashierPopup() {
+        this.state.showCashierPopup = true;
+    }
+
+    closeCashierPopup() {
+        this.state.showCashierPopup = false;
     }
 
 

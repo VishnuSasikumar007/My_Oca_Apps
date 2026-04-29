@@ -720,7 +720,90 @@ Closed
 
         </div>
 
+          <!-- TOP CASHIERS -->
+
+<div class="data-card">
+
+    <div class="data-title top-product-header">
+
+        <span>👨‍💼 Top Cashiers</span>
+
     </div>
+
+    <table class="modern-table">
+
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Cashier</th>
+                <th>Orders</th>
+                <th>Sales</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <t t-foreach="state.top_cashiers.slice(0,5)" t-as="c" t-key="c.id">
+
+                <tr>
+
+                    <td>
+                        <t t-esc="c.rank"/>
+                    </td>
+                   <td style="display:flex; align-items:center; gap:10px;">
+
+                        <div class="customer-img-wrapper">
+
+                            <!-- Small image -->
+                            <img t-att-src="'/web/image/hr.employee/' + c.id + '/image_128'"
+                                 class="customer-avatar"/>
+
+                            <!-- Zoom image -->
+                            <img t-att-src="'/web/image/hr.employee/' + c.id + '/image_128'"
+                                 class="customer-zoom"/>
+
+                        </div>
+
+                        <span>
+                            <t t-esc="c.name"/>
+                        </span>
+
+                    </td>
+
+                    <td>
+                        <t t-esc="c.orders"/> Orders
+                    </td>
+
+                    <td class="sales-value">
+                        <t t-esc="state.currency.symbol"/> 
+                        <t t-esc="c.sales"/>
+                    </td>
+
+                </tr>
+
+            </t>
+
+        </tbody>
+
+    </table>
+
+    <!-- VIEW MORE BUTTON -->
+
+    <div class="session-more" t-if="state.top_cashiers.length > 5">
+
+        <button class="more-btn" t-on-click="openCashierPopup">
+
+            View More (<t t-esc="state.top_cashiers.length - 5"/>)
+
+        </button>
+
+    </div>
+
+</div>
+
+    </div>
+
+  
 
 
     <t t-if="state.showProductPopup">
@@ -1204,6 +1287,74 @@ Closed
 
                             <td class="sales-value">
                                 <t t-esc="state.currency.symbol"/> <t t-esc="c[2]"/>
+                            </td>
+
+                        </tr>
+
+                    </t>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</t>
+
+
+<!-- CASHIER POPUP -->
+
+<t t-if="state.showCashierPopup">
+
+    <div class="session-popup-overlay"
+         t-on-click="closeCashierPopup">
+
+        <div class="session-popup"
+             t-on-click.stop="">
+
+            <div class="popup-header">
+
+                <span>Top Cashiers</span>
+
+                <button class="popup-close"
+                        t-on-click="closeCashierPopup">
+                    ✕
+                </button>
+
+            </div>
+
+            <table class="modern-table">
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Cashier</th>
+                        <th>Orders</th>
+                        <th>Sales</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <t t-foreach="state.top_cashiers.slice(5)" t-as="c" t-key="c.id">
+
+                        <tr>
+
+                            <td><t t-esc="c.rank"/></td>
+
+                            <td>
+                                <t t-esc="c.name"/>
+                            </td>
+
+                            <td>
+                                <t t-esc="c.orders"/>
+                            </td>
+
+                            <td class="sales-value">
+                                <t t-esc="state.currency.symbol"/> 
+                                <t t-esc="c.sales"/>
                             </td>
 
                         </tr>

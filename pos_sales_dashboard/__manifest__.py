@@ -23,7 +23,7 @@
 
         Designed for better business decision-making directly from POS.
     """,
-    'version': "19.0.1.0",
+    'version': "19.0.2.0",
     'sequence': 10,
     'author': "Vishnu Sasikumar",
     'category': 'Point of Sale',

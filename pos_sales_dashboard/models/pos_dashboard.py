@@ -393,6 +393,64 @@ class PosDashboard(models.Model):
             })
 
 
+
+        # ---------------------------------------------------------
+        # TOP CASHIERS (Employee)
+        # ---------------------------------------------------------
+
+        top_cashiers = []
+
+        if filter_type == 'today':
+            cashier_query = """
+                SELECT 
+                    he.id,
+                    he.name,
+                    COUNT(po.id) AS orders,
+                    COALESCE(SUM(po.amount_total), 0) AS sales
+                FROM pos_order po
+                JOIN hr_employee he ON po.employee_id = he.id
+                WHERE DATE(po.date_order) = %s
+                AND po.company_id = %s
+            """
+        else:
+            cashier_query = """
+                SELECT 
+                    he.id,
+                    he.name,
+                    COUNT(po.id) AS orders,
+                    COALESCE(SUM(po.amount_total), 0) AS sales
+                FROM pos_order po
+                JOIN hr_employee he ON po.employee_id = he.id
+                WHERE DATE(po.date_order) >= %s
+                AND po.company_id = %s
+            """
+
+        params = [date_from, company_id]
+
+        # Optional session filter
+        if session_id:
+            cashier_query += " AND po.session_id = %s"
+            params.append(session_id)
+
+        cashier_query += """
+            GROUP BY he.id, he.name
+            ORDER BY sales DESC
+            LIMIT 10
+        """
+
+        self.env.cr.execute(cashier_query, tuple(params))
+        cashier_rows = self.env.cr.fetchall()
+        rank = 1
+        for row in cashier_rows:
+            top_cashiers.append({
+                "rank": rank,
+                "id": row[0],
+                "name": row[1],
+                "orders": row[2],
+                "sales": float(row[3] or 0),
+            })
+            rank += 1
+
         # ---------------------------------------------------------
         # STORE SALES COMPARISON (BASED ON FILTER)
         # ---------------------------------------------------------
@@ -549,7 +607,6 @@ class PosDashboard(models.Model):
 
         self.env.cr.execute(notification_query, tuple(params))
         notification_orders = self.env.cr.fetchall()
-
         notification_count = len(notification_orders)
         return {
             "total_sales": round(total_sales, 2),
@@ -569,6 +626,7 @@ class PosDashboard(models.Model):
             "open_sessions": open_sessions,
             "closed_sessions": closed_sessions,
             "store_comparison": store_comparison,
+            "top_cashiers": top_cashiers,
         }
 
     # Product Details

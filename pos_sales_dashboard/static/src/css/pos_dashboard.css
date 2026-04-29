@@ -1135,3 +1135,144 @@ color:#6b7280;
     border: 1px solid #ddd;
     width: 180px;
 }
+
+
+/* -----------------------------------
+   TOP CASHIERS TABLE ENHANCEMENT
+----------------------------------- */
+
+/* Rank Badge (1,2,3 highlight) */
+.rank-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    font-size:13px;
+    font-weight:600;
+    color:white;
+    background:#94a3b8;
+}
+
+/* Top 3 highlight */
+.rank-1{ background:linear-gradient(135deg,#f6c23e,#dda20a); } /* Gold */
+.rank-2{ background:linear-gradient(135deg,#c0c0c0,#8c8c8c); } /* Silver */
+.rank-3{ background:linear-gradient(135deg,#cd7f32,#8b5a2b); } /* Bronze */
+
+
+/* Cashier Cell (avatar + name) */
+.cashier-cell{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* Avatar */
+.cashier-avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #e5e7eb;
+    transition:.25s;
+}
+
+.cashier-avatar:hover{
+    transform:scale(1.1);
+    border-color:#4e73df;
+}
+
+/* Name */
+.cashier-name{
+    font-weight:500;
+    color:#333;
+}
+
+/* Orders Count */
+.orders-count{
+    font-weight:600;
+    color:#4e73df;
+}
+
+/* Sales Value (already exists but enhanced) */
+.sales-value{
+    font-weight:700;
+    color:#1cc88a;
+}
+
+/* Row hover enhancement */
+.modern-table tr:hover .cashier-name{
+    color:#1cc88a;
+}
+
+
+/* -----------------------------------
+   PERFORMANCE BAR (Optional Advanced UI)
+----------------------------------- */
+
+.performance-bar{
+    width:100%;
+    height:6px;
+    background:#e5e7eb;
+    border-radius:6px;
+    overflow:hidden;
+    margin-top:6px;
+}
+
+.performance-fill{
+    height:100%;
+    background:linear-gradient(135deg,#1cc88a,#13855c);
+    border-radius:6px;
+    transition:width .4s ease;
+}
+
+
+/* -----------------------------------
+   DARK MODE SUPPORT
+----------------------------------- */
+
+.o_pos_dashboard.dark-mode .cashier-name{
+    color:#e5e7eb;
+}
+
+.o_pos_dashboard.dark-mode .cashier-avatar{
+    border:2px solid #334155;
+}
+
+.o_pos_dashboard.dark-mode .orders-count{
+    color:#60a5fa;
+}
+
+.o_pos_dashboard.dark-mode .performance-bar{
+    background:#334155;
+}
+
+
+/* -----------------------------------
+   MOBILE OPTIMIZATION
+----------------------------------- */
+
+@media (max-width:768px){
+
+    .cashier-avatar{
+        width:28px;
+        height:28px;
+    }
+
+    .cashier-name{
+        font-size:13px;
+    }
+
+    .orders-count,
+    .sales-value{
+        font-size:13px;
+    }
+
+    .rank-badge{
+        width:24px;
+        height:24px;
+        font-size:11px;
+    }
+}
+
