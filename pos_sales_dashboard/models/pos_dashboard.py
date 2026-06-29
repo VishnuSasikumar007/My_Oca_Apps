@@ -24,21 +24,36 @@ class PosDashboard(models.Model):
             date_from = today.replace(day=1).date()
         elif filter_type == "year":
             date_from = today.replace(month=1, day=1).date()
+        elif filter_type == "yesterday":
+            date_from = (today - timedelta(days=1)).date()
         else:
             date_from = today.date()
 
         # -----------------------------
         # ORDER DOMAIN (DATE + SESSION)
         # -----------------------------
-        if filter_type == 'today':
+        if filter_type in ['today', 'yesterday']:
+
+            date_start = datetime.combine(
+                date_from,
+                datetime.min.time()
+            )
+
+            date_end = datetime.combine(
+                date_from,
+                datetime.max.time()
+            )
+
             domain = [
-                ('date_order', '=', date_from),
+                ('date_order', '>=', date_start),
+                ('date_order', '<=', date_end),
                 ('company_id', '=', company_id)
             ]
+
         else:
             domain = [
-            ('date_order', '>=', date_from),
-            ('company_id', '=', company_id)
+                ('date_order', '>=', date_from),
+                ('company_id', '=', company_id)
             ]
 
         if session_id:
@@ -54,7 +69,7 @@ class PosDashboard(models.Model):
         # ---------------------------------------------------------
         # TOP PRODUCTS
         # ---------------------------------------------------------
-        if filter_type == 'today':
+        if filter_type in ['today', 'yesterday']:
             product_query = """
                 SELECT pol.product_id,
                        SUM(pol.qty),
@@ -84,7 +99,7 @@ class PosDashboard(models.Model):
         product_query += """
             GROUP BY pol.product_id
             ORDER BY SUM(pol.qty) DESC
-            LIMIT 10
+            LIMIT 30
         """
 
         self.env.cr.execute(product_query, tuple(params))
@@ -113,7 +128,7 @@ class PosDashboard(models.Model):
         # ---------------------------------------------------------
         # STORE PERFORMANCE
         # ---------------------------------------------------------
-        if filter_type == 'today':
+        if filter_type in ['today', 'yesterday']:
             store_query = """
                 SELECT pc.name,
                        COUNT(po.id),
@@ -164,7 +179,7 @@ class PosDashboard(models.Model):
         # ---------------------------------------------------------
         # PAYMENT METHODS
         # ---------------------------------------------------------
-        if filter_type == 'today':
+        if filter_type in ['today', 'yesterday']:
             payment_query = f"""
                 SELECT ppm.name->>'{lang}' AS name,
                        SUM(pp.amount) AS total
@@ -202,7 +217,7 @@ class PosDashboard(models.Model):
         # ---------------------------------------------------------
         # TOP CUSTOMERS
         # ---------------------------------------------------------
-        if filter_type == 'today':
+        if filter_type in ['today', 'yesterday']:
             customer_query = """
                 SELECT rp.id,
                        rp.name,
@@ -334,7 +349,7 @@ class PosDashboard(models.Model):
         relation_table = field.relation
         col1 = field.column1
         col2 = field.column2
-        if filter_type == 'today':
+        if filter_type in ['today', 'yesterday']:
             category_query = f"""
                 SELECT pc.id,
                        pc.name,
@@ -400,7 +415,7 @@ class PosDashboard(models.Model):
 
         top_cashiers = []
 
-        if filter_type == 'today':
+        if filter_type in ['today', 'yesterday']:
             cashier_query = """
                 SELECT 
                     he.id,
@@ -629,6 +644,16 @@ class PosDashboard(models.Model):
             "top_cashiers": top_cashiers,
         }
 
+    # notification for new orders
+    @api.model
+    def get_latest_order_id(self):
+        order = self.env['pos.order'].search(
+            [],
+            order='id desc',
+            limit=1
+        )
+        return order.id or 0
+
     # Product Details
     @api.model
     def get_product_sales_details(self, product_id, filter_type="today", session_id=False):
@@ -644,6 +669,8 @@ class PosDashboard(models.Model):
             date_from = today.replace(day=1).date()
         elif filter_type == "year":
             date_from = today.replace(month=1, day=1).date()
+        elif filter_type == "yesterday":
+            date_from = (today - timedelta(days=1)).date()
         else:
             date_from = today.date()
 
@@ -727,6 +754,8 @@ class PosDashboard(models.Model):
             date_from = today.replace(day=1).date()
         elif filter_type == "year":
             date_from = today.replace(month=1, day=1).date()
+        elif filter_type == "yesterday":
+            date_from = (today - timedelta(days=1)).date()
         else:
             date_from = today.date()
 
@@ -763,3 +792,69 @@ class PosDashboard(models.Model):
         )[:30]
 
         return result
+
+
+    # Payment Method details
+    @api.model
+    def get_payment_method_details(
+            self,
+            payment_method,
+            filter_type="today",
+            session_id=False):
+
+        today = datetime.today()
+        company_id = self.env.company.id
+
+        if filter_type == "today":
+            date_from = today.date()
+        elif filter_type == "week":
+            date_from = (today - timedelta(days=7)).date()
+        elif filter_type == "month":
+            date_from = today.replace(day=1).date()
+        elif filter_type == "year":
+            date_from = today.replace(month=1, day=1).date()
+        elif filter_type == "yesterday":
+            date_from = (today - timedelta(days=1)).date()
+        else:
+            date_from = today.date()
+
+        lang = self.env.lang or 'en_US'
+
+        query = f"""
+            SELECT
+                pc.name,
+                COUNT(po.id),
+                SUM(pp.amount)
+            FROM pos_payment pp
+            JOIN pos_payment_method ppm
+                ON pp.payment_method_id = ppm.id
+            JOIN pos_order po
+                ON pp.pos_order_id = po.id
+            JOIN pos_config pc
+                ON po.config_id = pc.id
+            WHERE ppm.name->>'{lang}' = %s
+            AND po.company_id = %s
+            AND DATE(po.date_order) >= %s
+        """
+
+        params = [payment_method, company_id, date_from]
+
+        if session_id:
+            query += " AND po.session_id = %s"
+            params.append(session_id)
+
+        query += """
+            GROUP BY pc.name
+            ORDER BY SUM(pp.amount) DESC
+        """
+
+        self.env.cr.execute(query, tuple(params))
+
+        return [
+            {
+                "store": r[0],
+                "orders": r[1],
+                "amount": r[2] or 0,
+            }
+            for r in self.env.cr.fetchall()
+        ]

@@ -18,6 +18,21 @@
 
                     <!-- NOTIFICATION -->
 
+
+                    <t t-if="state.has_new_orders">
+                       <div class="new-order-indicator">
+                            <i class="fa fa-bell bell-animate"></i>
+
+                            <span class="new-order-text">
+                                New Orders Available
+                            </span>
+
+                            <button class="refresh-btn"
+                                    t-on-click="refreshDashboard">
+                                <i class="fa fa-refresh"/>
+                            </button>
+                        </div>
+                    </t>
                     <div class="notification-icon">
 
                         <i class="fa fa-bell" t-on-click="toggleNotifications"/>
@@ -130,6 +145,13 @@
     <div class="filter-buttons">
 
         <button t-on-click="changeFilter"
+            data-filter="yesterday"
+            t-att-class="'filter-btn ' + (state.filter === 'yesterday' ? 'active' : '')">
+            Yesterday
+        </button>
+
+
+        <button t-on-click="changeFilter"
             data-filter="today"
             t-att-class="'filter-btn ' + (state.filter === 'today' ? 'active' : '')">
             Today
@@ -207,6 +229,7 @@
 
             <thead>
                 <tr>
+                    <th>S.No.</th>
                     <th>Session</th>
                     <th>Cashier</th>
                     <th>Store</th>
@@ -215,15 +238,17 @@
             </thead>
 
             <tbody>
-
+                 <t t-set="as_sno" t-value="1"/>
                 <t t-foreach="state.sessions.slice(0,5)" t-as="s" t-key="s.id">
 
                     <tr>
+                        <td><t t-esc="as_sno"/></td>
                         <td><t t-esc="s.name"/></td>
                         <td><t t-esc="s.user"/></td>
                         <td><t t-esc="s.config"/></td>
                         <td><t t-esc="s.start_at"/></td>
                     </tr>
+                    <t t-set="as_sno" t-value="as_sno + 1"/>
 
                 </t>
 
@@ -247,7 +272,7 @@
 
         <div class="payment-summary">
 
-            <div class="payment-title">Session Status</div>
+            <!-- <div class="payment-title">Session Status</div> -->
 
             <div class="payment-methods">
 
@@ -379,6 +404,7 @@ Closed
 
             <thead>
                 <tr>
+                    <th>S.No.</th>
                     <th>Product</th>
                     <th>Qty</th>
                     <th>History</th>
@@ -386,11 +412,11 @@ Closed
             </thead>
 
             <tbody>
-
+                <t t-set="sno" t-value="1"/>
                 <t t-foreach="state.filtered_products.slice(0,5)" t-as="p" t-key="p[2]">
 
                     <tr>
-
+                        <td><t t-esc="sno"/></td>
                         <td><t t-esc="p[0]"/></td>
 
                         <td>
@@ -410,6 +436,7 @@ Closed
                         </td>
 
                     </tr>
+                     <t t-set="sno" t-value="sno + 1"/>
 
                 </t>
 
@@ -555,7 +582,10 @@ Closed
 
             <t t-foreach="state.payments" t-as="p" t-key="p[0]">
 
-                <div class="payment-pill">
+                <div class="payment-pill"
+     t-on-click="openPaymentDetails"
+     t-att-data-payment="p[0]"
+     style="cursor:pointer;">
 
                     <span class="payment-icon">
 
@@ -600,19 +630,26 @@ Closed
 
             <thead>
                 <tr>
+                    <th>S.No.</th>
                     <th>Customer</th>
                     <th>Sales</th>
                 </tr>
             </thead>
 
             <tbody>
+                 <t t-set="ts_sno" t-value="1"/>
 
                 <t t-foreach="state.customers.slice(0,5)" t-as="c" t-key="c[0]">
 
                     <tr>
+                        <td>
+                                <t t-esc="ts_sno"/>
+                            </td>
 
                         <!-- CUSTOMER WITH IMAGE -->
                         <td style="display:flex; align-items:center; gap:10px;">
+
+                            
 
                             <div class="customer-img-wrapper">
 
@@ -636,6 +673,7 @@ Closed
                             </td>
 
                         </tr>
+                        <t t-set="ts_sno" t-value="ts_sno + 1"/>
 
                     </t>
 
@@ -665,6 +703,7 @@ Closed
 
                 <thead>
                     <tr>
+                        <th>S.No.</th>
                         <th>Category</th>
                         <th>Qty</th>
                         <th>History</th>
@@ -672,12 +711,16 @@ Closed
                 </thead>
 
                 <tbody>
-
+                    <t t-set="tpc_sno" t-value="1"/>
                     <t t-foreach="state.categories.slice(0,5)" t-as="cat" t-key="cat.id">
 
                         <tr>
 
                             <td>
+                                <t t-esc="tpc_sno"/>
+                            </td>
+
+                             <td>
                                 <t t-esc="cat.name"/>
                             </td>
 
@@ -700,6 +743,7 @@ Closed
                             </td>
 
                         </tr>
+                        <t t-set="tpc_sno" t-value="tpc_sno + 1"/>
 
                     </t>
 
@@ -815,7 +859,6 @@ Closed
                 <div class="popup-header">
 
                     <span>All Top Selling Products</span>
-
                     <button class="popup-close" t-on-click="closeProductPopup">
                         ✕
                     </button>
@@ -826,16 +869,19 @@ Closed
 
                     <thead>
                         <tr>
+                            <th>S.No.</th>
                             <th>Product</th>
                             <th>Qty</th>
                         </tr>
                     </thead>
 
                     <tbody>
+                         <t t-set="tsno" t-value="1"/>
 
                         <t t-foreach="state.products.slice(5)" t-as="p" t-key="p[0]">
 
                             <tr>
+                                <td><t t-esc="tsno"/></td>
 
                                 <td><t t-esc="p[0]"/></td>
 
@@ -846,6 +892,7 @@ Closed
                                 </td>
 
                             </tr>
+                            <t t-set="tsno" t-value="tsno + 1"/>
 
                         </t>
 
@@ -882,6 +929,7 @@ Closed
 
                     <thead>
                         <tr>
+                            <th>S.No.</th>
                             <th>Session</th>
                             <th>Cashier</th>
                             <th>Store</th>
@@ -890,15 +938,17 @@ Closed
                     </thead>
 
                     <tbody>
-
+                        <t t-set="aas_sno" t-value="1"/>
                         <t t-foreach="state.sessions.slice(5)" t-as="s" t-key="s.id">
 
                             <tr>
+                                <td><t t-esc="aas_sno"/></td>
                                 <td><t t-esc="s.name"/></td>
                                 <td><t t-esc="s.user"/></td>
                                 <td><t t-esc="s.config"/></td>
                                 <td><t t-esc="s.start_at"/></td>
                             </tr>
+                            <t t-set="aas_sno" t-value="aas_sno + 1"/>
 
                         </t>
 
@@ -932,6 +982,7 @@ Closed
 
                     <thead>
                         <tr>
+                            <th>S.No.</th>
                             <th>Order</th>
                             <th>Date</th>
                             <th>Qty</th>
@@ -942,9 +993,15 @@ Closed
 
                     <tbody>
 
+                        <t t-set="psd_sno" t-value="1"/>
+
                         <t t-foreach="state.product_details" t-as="d" t-key="d.id">
 
                             <tr>
+
+                                 <td>
+                                    <t t-esc="psd_sno"/>
+                                </td>
 
                                 <td>
                                     <t t-esc="d.order"/>
@@ -967,6 +1024,7 @@ Closed
                                 </td>
 
                             </tr>
+                            <t t-set="psd_sno" t-value="psd_sno + 1"/>
 
                         </t>
 
@@ -1132,17 +1190,20 @@ Closed
 
                     <thead>
                         <tr>
+                            <th>S.No.</th>
                             <th>Category</th>
                             <th>Qty</th>
                         </tr>
                     </thead>
 
                     <tbody>
-
+                        <t t-set="tcs_sno" t-value="1"/>
                         <t t-foreach="state.categories.slice(5)" t-as="cat" t-key="cat.id">
 
                             <tr>
-
+                                <td>
+                                    <t t-esc="tcs_sno"/>
+                                </td>
                                 <td>
                                     <t t-esc="cat.name"/>
                                 </td>
@@ -1154,6 +1215,7 @@ Closed
                                 </td>
 
                             </tr>
+                            <t t-set="tcs_sno" t-value="tcs_sno + 1"/>
 
                         </t>
 
@@ -1193,18 +1255,23 @@ Closed
 
                 <thead>
                     <tr>
+                        <th>S.No.</th>
                         <th>Product</th>
                         <th>Qty</th>
                     </tr>
                 </thead>
 
                 <tbody>
-
+                    <t t-set="sp_sno" t-value="1"/>
                     <t t-foreach="state.category_products"
                      t-as="p"
                      t-key="p.id">
 
                      <tr>
+
+                        <td>
+                            <t t-esc="sp_sno"/>
+                        </td>
 
                         <td>
                             <t t-esc="p.name"/>
@@ -1217,6 +1284,7 @@ Closed
                         </td>
 
                     </tr>
+                    <t t-set="sp_sno" t-value="sp_sno + 1"/>
 
                 </t>
 
@@ -1254,16 +1322,19 @@ Closed
 
             <thead>
                 <tr>
+                    <th>S.No.</th>
                     <th>Customer</th>
                     <th>Sales</th>
                 </tr>
             </thead>
 
             <tbody>
-
+                <t t-set="tc_sno" t-value="1"/>
                 <t t-foreach="state.customers.slice(5)" t-as="c" t-key="c[0] + '_' + c_index">
 
                     <tr>
+
+                        <td><t t-esc="tc_sno"/></td>
 
                         <!-- CUSTOMER WITH IMAGE -->
                         <td style="display:flex; align-items:center; gap:10px;">
@@ -1290,6 +1361,7 @@ Closed
                             </td>
 
                         </tr>
+                        <t t-set="tc_sno" t-value="tc_sno + 1"/>
 
                     </t>
 
@@ -1344,8 +1416,20 @@ Closed
 
                             <td><t t-esc="c.rank"/></td>
 
-                            <td>
-                                <t t-esc="c.name"/>
+                            <td style="display:flex; align-items:center; gap:10px;">
+
+                                <div class="customer-img-wrapper">
+
+                            <!-- Small image -->
+                            <img t-att-src="'/web/image/hr.employee/' + c.id + '/image_128'"
+                                 class="customer-avatar"/>
+
+                            <!-- Zoom image -->
+                            <img t-att-src="'/web/image/hr.employee/' + c.id + '/image_128'"
+                                 class="customer-zoom"/>
+
+                        </div>
+                                <span><t t-esc="c.name"/></span>
                             </td>
 
                             <td>
@@ -1355,6 +1439,74 @@ Closed
                             <td class="sales-value">
                                 <t t-esc="state.currency.symbol"/> 
                                 <t t-esc="c.sales"/>
+                            </td>
+
+                        </tr>
+
+                    </t>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</t>
+
+<!-- Payment Details popup -->
+
+<t t-if="state.showPaymentPopup">
+
+    <div class="session-popup-overlay"
+         t-on-click="closePaymentPopup">
+
+        <div class="session-popup"
+             t-on-click.stop="">
+
+            <div class="popup-header">
+
+                <span>
+                    <t t-esc="state.selectedPaymentMethod"/> Details
+                </span>
+
+                <button class="popup-close"
+                        t-on-click="closePaymentPopup">
+                    ✕
+                </button>
+
+            </div>
+
+            <table class="modern-table">
+
+                <thead>
+                    <tr>
+                        <th>Store</th>
+                        <th>Orders</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <t t-foreach="state.paymentDetails"
+                       t-as="p"
+                       t-key="p.store">
+
+                        <tr>
+
+                            <td>
+                                <t t-esc="p.store"/>
+                            </td>
+
+                            <td>
+                                <t t-esc="p.orders"/>
+                            </td>
+
+                            <td class="sales-value">
+                                <t t-esc="state.currency.symbol"/>
+                                <t t-esc="p.amount"/>
                             </td>
 
                         </tr>

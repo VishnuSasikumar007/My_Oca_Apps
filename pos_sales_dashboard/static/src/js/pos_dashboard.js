@@ -57,14 +57,20 @@ class PosDashboard extends Component {
             filtered_products: [],
             top_cashiers: [],
             showCashierPopup: false,
+
+            showPaymentPopup: false,
+            paymentDetails: [],
+            selectedPaymentMethod: "",
+            has_new_orders: false,
+            latest_order_id: 0,
         });
 
         onWillStart(async () => {
             await this.loadDashboard();
-            //  setInterval(()=>{
-            //     this.loadActivityFeed();
-            // },5000); // refresh every 5 seconds
-            
+
+            setInterval(async () => {
+                await this.checkNewOrders();
+            }, 10000); // every 10 seconds
         });
 
     }
@@ -133,6 +139,14 @@ class PosDashboard extends Component {
         this.state.filtered_products = data.products;
         this.state.top_cashiers = data.top_cashiers || [];
 
+        if (!this.state.latest_order_id) {
+    this.state.latest_order_id = await this.orm.call(
+        "pos.sales.dashboard",
+        "get_latest_order_id",
+        []
+    );
+}
+        
 
 // render charts if enabled
         setTimeout(()=>{
@@ -149,8 +163,45 @@ class PosDashboard extends Component {
 
         },50);
 
+
+
+
     }
 
+
+// ==============================
+// CHECK NEW ORDER
+// ==============================
+
+
+   async checkNewOrders() {
+
+    const latest_id = await this.orm.call(
+        "pos.sales.dashboard",
+        "get_latest_order_id",
+        []
+    );
+
+    if (latest_id > this.state.latest_order_id) {
+        this.state.has_new_orders = true;
+    }
+}
+
+// ==============================
+// REFRESH METHOD
+// ==============================
+
+async refreshDashboard() {
+    await this.loadDashboard();
+
+    this.state.has_new_orders = false;
+
+    this.state.latest_order_id = await this.orm.call(
+        "pos.sales.dashboard",
+        "get_latest_order_id",
+        []
+    );
+}
 
 // ==============================
 // FILTER BUTTONS
@@ -617,6 +668,34 @@ class PosDashboard extends Component {
             }
         });
     }
+
+
+    // Payment details
+    async openPaymentDetails(ev){
+
+        const paymentMethod = ev.currentTarget.dataset.payment;
+
+        const details = await this.orm.call(
+            "pos.sales.dashboard",
+            "get_payment_method_details",
+            [
+                paymentMethod,
+                this.state.filter,
+                this.state.selected_session
+            ]
+        );
+
+        this.state.paymentDetails = details;
+        this.state.selectedPaymentMethod = paymentMethod;
+        this.state.showPaymentPopup = true;
+    }
+
+    closePaymentPopup(){
+        this.state.showPaymentPopup = false;
+}
+
+
+
 
 }
 

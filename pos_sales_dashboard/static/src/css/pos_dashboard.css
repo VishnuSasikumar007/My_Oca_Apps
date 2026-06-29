@@ -1276,3 +1276,116 @@ color:#6b7280;
     }
 }
 
+/*new order notification*/
+
+.new-order-indicator{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #ff9800, #ff5722);
+    color: white;
+    border-radius: 30px;
+    padding: 8px 14px;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(255, 87, 34, 0.35);
+    animation: pulseAnimation 1.5s infinite;
+}
+
+.new-order-text{
+    font-size: 13px;
+    font-weight: 700;
+    animation: shakeText 2s infinite;
+}
+
+.refresh-btn{
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    color: #ff5722;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: rotateRefresh 2s linear infinite;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.refresh-btn:hover{
+    transform: scale(1.1);
+}
+
+.refresh-btn i{
+    font-size: 16px;
+}
+
+/* Pulse effect */
+@keyframes pulseAnimation{
+    0%{
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,87,34,.7);
+    }
+    70%{
+        transform: scale(1.03);
+        box-shadow: 0 0 0 12px rgba(255,87,34,0);
+    }
+    100%{
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,87,34,0);
+    }
+}
+
+/* Refresh icon rotation */
+@keyframes rotateRefresh{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+/* Text shake */
+@keyframes shakeText{
+    0%,100%{
+        transform: translateX(0);
+    }
+    20%{
+        transform: translateX(-2px);
+    }
+    40%{
+        transform: translateX(2px);
+    }
+    60%{
+        transform: translateX(-2px);
+    }
+    80%{
+        transform: translateX(2px);
+    }
+}
+
+
+.bell-animate{
+    font-size: 18px;
+    animation: bellShake 1s infinite;
+}
+
+@keyframes bellShake{
+    0%,100%{
+        transform: rotate(0deg);
+    }
+    20%{
+        transform: rotate(15deg);
+    }
+    40%{
+        transform: rotate(-15deg);
+    }
+    60%{
+        transform: rotate(10deg);
+    }
+    80%{
+        transform: rotate(-10deg);
+    }
+}
+
