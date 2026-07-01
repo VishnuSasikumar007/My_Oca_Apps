@@ -5,6 +5,35 @@
 
         <div class="o_pos_dashboard container-fluid" t-attf-class="{{ state.dark_mode ? 'dark-mode' : '' }}">
 
+            <div class="dashboard-layout">
+
+    <div t-att-class="'dashboard-sidebar ' + (!state.sidebar_open ? 'sidebar-hidden' : '')">
+
+    <!-- <div class="sidebar-title">
+        Menu
+    </div> -->
+
+    <div class="sidebar-menu-item"
+         t-on-click="openAboutPopup">
+
+        <i class="fa fa-info-circle"/>
+        <span>About</span>
+
+    </div>
+
+</div>
+
+    <div class="dashboard-main">
+
+        <button class="sidebar-toggle-btn"
+        t-on-click="toggleSidebar">
+    <i class="fa fa-bars"/>
+</button>
+
+
+
+
+
             <!-- ================= TOP USER ROW ================= -->
 
             <div class="top-user-bar">
@@ -1523,7 +1552,104 @@ Closed
 
 </t>
 
+<!-- About popup -->
 
+<t t-if="state.showAboutPopup">
+
+    <div class="session-popup-overlay"
+         t-on-click="closeAboutPopup">
+
+        <div class="session-popup"
+             t-on-click.stop="">
+
+            <div class="popup-header">
+
+                <span>About POS Dashboard</span>
+
+                <button class="popup-close"
+                        t-on-click="closeAboutPopup">
+                    ✕
+                </button>
+
+            </div>
+
+          <div class="about-popup-content">
+
+    <div class="about-header-card">
+
+        <div class="about-logo">
+            <i class="fa fa-line-chart"/>
+        </div>
+
+        <div class="about-header-info">
+            <h3>POS Analytics Dashboard</h3>
+
+            <span class="version-badge">
+                Version 19.0.5.0
+            </span>
+        </div>
+
+    </div>
+
+    <div class="about-info-row">
+        <i class="fa fa-calendar"/>
+        <span>
+            Last Updated : 29 June 2026
+        </span>
+    </div>
+
+    <div class="about-section-title">
+        🚀 What's New
+    </div>
+
+    <div class="feature-card">
+        <i class="fa fa-bell"/>
+        <div>
+            <strong>Smart Notifications</strong>
+            <p>Instant order alerts with one-click refresh support.</p>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <i class="fa fa-clock-o"/>
+        <div>
+            <strong>Yesterday Filter</strong>
+            <p>Quick comparison with previous day sales performance.</p>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <i class="fa fa-credit-card"/>
+        <div>
+            <strong>Payment Details Popup</strong>
+            <p>Detailed payment analysis by store and order count.</p>
+        </div>
+    </div>
+
+    <div class="coming-soon-card">
+
+        <i class="fa fa-rocket"/>
+
+        <div>
+            <strong>More Features Coming Soon</strong>
+            <p>
+                Stay tuned for exciting new analytics and dashboard enhancements.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+        </div>
+
+    </div>
+
+</t>
+
+
+</div>
+</div>
 </div>
 
 </t>

@@ -63,6 +63,10 @@ class PosDashboard extends Component {
             selectedPaymentMethod: "",
             has_new_orders: false,
             latest_order_id: 0,
+            sidebar_open: false,
+            showAboutPopup: false,
+            selected_product: null,
+
         });
 
         onWillStart(async () => {
@@ -105,16 +109,28 @@ class PosDashboard extends Component {
         }
 
     }
+
+toggleSidebar() {
+    this.state.sidebar_open = !this.state.sidebar_open;
+}
 // ==============================
 // LOAD DASHBOARD DATA
 // ==============================
     async loadDashboard(){
 
         const data = await this.orm.call(
-            "pos.sales.dashboard",
-            "get_dashboard_data",
-            [this.state.filter,this.state.selected_session]
-            );
+    "pos.sales.dashboard",
+    "get_dashboard_data",
+    [
+        this.state.filter,
+        this.state.selected_session,
+        this.state.selected_product,
+        this.state.selected_store,
+        this.state.selected_category_filter,
+        this.state.selected_cashier,
+        this.state.selected_payment_filter,
+    ]
+);
 
         this.state.sales = data.total_sales;
         this.state.products = data.products;
@@ -138,6 +154,12 @@ class PosDashboard extends Component {
         this.state.store_comparison = data.store_comparison || [];
         this.state.filtered_products = data.products;
         this.state.top_cashiers = data.top_cashiers || [];
+
+        this.state.all_products = data.all_products || [];
+this.state.all_stores = data.all_stores || [];
+this.state.all_categories = data.all_categories || [];
+this.state.all_cashiers = data.all_cashiers || [];
+this.state.all_payment_methods = data.all_payment_methods || [];
 
         if (!this.state.latest_order_id) {
     this.state.latest_order_id = await this.orm.call(
@@ -364,6 +386,15 @@ async refreshDashboard() {
         this.state.showCustomerPopup = false;
     }
 
+// About popup
+    openAboutPopup() {
+    this.state.showAboutPopup = true;
+}
+
+closeAboutPopup() {
+    this.state.showAboutPopup = false;
+}
+
 
 // ==============================
 // PRODUCT CHART TOGGLE
@@ -380,6 +411,9 @@ async refreshDashboard() {
         }
 
     }
+
+
+
 
 
 // Search Function

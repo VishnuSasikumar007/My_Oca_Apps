@@ -8,7 +8,15 @@ class PosDashboard(models.Model):
     _description = "POS Dashboard"
 
     @api.model
-    def get_dashboard_data(self, filter_type="today", session_id=False):
+    def get_dashboard_data(
+        self,
+        filter_type="today",
+        session_id=False,
+        product_id=False,
+        store_id=False,
+        category_id=False,
+        cashier_id=False,
+        payment_method_id=False):
 
         today = datetime.today()
         company_id = self.env.company.id
@@ -58,6 +66,17 @@ class PosDashboard(models.Model):
 
         if session_id:
             domain.append(('session_id', '=', session_id))
+
+
+        # Sidebar Filters
+        if store_id:
+            domain.append(('config_id', '=', int(store_id)))
+
+        if cashier_id:
+            domain.append(('employee_id', '=', int(cashier_id)))
+
+        if product_id:
+            domain.append(('lines.product_id', '=', int(product_id)))
 
         orders = self.env['pos.order'].search(domain)
 
@@ -642,6 +661,31 @@ class PosDashboard(models.Model):
             "closed_sessions": closed_sessions,
             "store_comparison": store_comparison,
             "top_cashiers": top_cashiers,
+            # Sidebar Filters
+    'all_products': [
+        {'id': p.id, 'name': p.display_name}
+        for p in self.env['product.product'].search([])
+    ],
+
+    'all_stores': [
+        {'id': s.id, 'name': s.name}
+        for s in self.env['pos.config'].search([])
+    ],
+
+    'all_categories': [
+        {'id': c.id, 'name': c.name}
+        for c in self.env['pos.category'].search([])
+    ],
+
+    'all_cashiers': [
+        {'id': e.id, 'name': e.name}
+        for e in self.env['hr.employee'].search([])
+    ],
+
+    'all_payment_methods': [
+        {'id': p.id, 'name': p.name}
+        for p in self.env['pos.payment.method'].search([])
+    ],
         }
 
     # notification for new orders
