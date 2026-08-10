@@ -1,0 +1,41 @@
+:root {
+    --uws-bg: #ffffff;
+    --uws-bg-opacity: 1;
+    --uws-gif-size: 120px;
+    --uws-fade: 420ms;
+}
+
+.uws-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--uws-bg);
+    opacity: var(--uws-bg-opacity);
+    transition: opacity var(--uws-fade) ease, visibility var(--uws-fade) ease;
+}
+
+.uws-overlay.uws-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+.uws-overlay.uws-transition {
+    background-color: rgba(255, 255, 255, 0.72);
+}
+
+.uws-gif {
+    width: var(--uws-gif-size);
+    height: var(--uws-gif-size);
+    object-fit: contain;
+}
+
+@media (max-width: 576px) {
+    :root {
+        --uws-gif-size: 84px;
+    }
+}

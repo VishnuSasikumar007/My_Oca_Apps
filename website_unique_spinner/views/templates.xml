@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- spinner for every frontend page -->
+    <template id="unique_spinner_overlay" inherit_id="website.layout" name="Website Unique Spinner">
+        <xpath expr="//body" position="inside">
+            <div id="uws-overlay" class="uws-overlay" aria-hidden="true">
+                <img class="uws-gif"
+                     t-att-src="'/website_unique_spinner/static/src/img/spinner.gif'"
+                     alt="Loading..."/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
