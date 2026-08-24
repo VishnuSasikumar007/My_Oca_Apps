@@ -29,6 +29,8 @@
     """,
     'author': 'Vishnu Sasikumar',
     "license": "LGPL-3",
+    'price': 30,
+    'currency': 'USD',
     "depends": ["web", "mail"],
     "data": [
         "security/ir.model.access.csv",
