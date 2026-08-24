@@ -1,0 +1,104 @@
+// Styling for the OTP login flow (/web/login_otp, /web/login_otp/verify).
+// Scoped under .o_otp_card so it can't leak into or clash with the rest
+// of the login page's own styles. Colors are pulled from Bootstrap's own
+// variables where possible so this follows whatever theme/branding is
+// already applied to the site, rather than introducing a new palette.
+
+.o_otp_card {
+    max-width: 380px;
+    margin: 0 auto;
+
+    &__icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(var(--bs-primary-rgb, 113, 75, 103), 0.1);
+        color: var(--bs-primary, #714b67);
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 0.25rem;
+    }
+
+    &__subtitle {
+        font-size: 0.9rem;
+        color: var(--bs-secondary-color, #6c757d);
+        text-align: center;
+        margin-bottom: 1.5rem;
+        line-height: 1.4;
+    }
+}
+
+.o_otp_expiry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(var(--bs-primary-rgb, 113, 75, 103), 0.1);
+    color: var(--bs-primary, #714b67);
+    font-variant-numeric: tabular-nums;
+
+    &.o_otp_expiry--expired {
+        background: rgba(var(--bs-danger-rgb, 220, 53, 69), 0.12);
+        color: var(--bs-danger, #dc3545);
+    }
+}
+
+// Six separate boxes standing in for one code, kept in sync with a
+// hidden `code` input via JS. Feels closer to a native OTP prompt than
+// a single free-text field.
+.o_otp_digits {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+
+    input {
+        width: 44px;
+        height: 52px;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: 600;
+        border: 1px solid var(--bs-border-color, #ced4da);
+        border-radius: 0.5rem;
+        background: var(--bs-body-bg, #fff);
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+        &:focus {
+            outline: none;
+            border-color: var(--bs-primary, #714b67);
+            box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb, 113, 75, 103), 0.15);
+        }
+
+        &.is-invalid {
+            border-color: var(--bs-danger, #dc3545);
+        }
+    }
+}
+
+.o_otp_actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.o_otp_footer_link {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.9rem;
+}

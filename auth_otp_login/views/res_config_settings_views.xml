@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_auth_otp_login" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.auth.otp.login</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="Login with OTP" string="Login with OTP"
+                     data-key="auth_otp_login" id="auth_otp_login_settings">
+                    <h2>Login with a Code by Email</h2>
+                    <div class="row mt16 o_settings_container" id="auth_otp_login_container">
+
+                        <div class="col-12 col-lg-6 o_setting_box" id="auth_otp_login_show_on_login_box">
+                            <div class="o_setting_left_pane">
+                                <field name="auth_otp_login_show_on_login"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auth_otp_login_show_on_login"/>
+                                <div class="text-muted">
+                                    Show the "Log in with a code by email" link on the
+                                    login page (/web/login). Turn this off to hide the
+                                    passwordless option while keeping it available at
+                                    /web/login_otp for anyone with the direct link.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box" id="auth_otp_login_validity_box"
+                             invisible="not auth_otp_login_show_on_login">
+                            <div class="o_setting_right_pane">
+                                <label for="auth_otp_login_code_validity_minutes" string="Code Validity"/>
+                                <div class="text-muted">
+                                    How long an emailed code stays valid before it expires.
+                                </div>
+                                <div class="content-group">
+                                    <field name="auth_otp_login_code_validity_minutes" class="o_light_label" style="width: 80px;"/>
+                                    <span> minutes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box" id="auth_otp_login_attempts_box"
+                             invisible="not auth_otp_login_show_on_login">
+                            <div class="o_setting_right_pane">
+                                <label for="auth_otp_login_max_attempts" string="Max Attempts"/>
+                                <div class="text-muted">
+                                    Number of incorrect attempts allowed before a code is
+                                    invalidated and a new one must be requested.
+                                </div>
+                                <div class="content-group">
+                                    <field name="auth_otp_login_max_attempts" class="o_light_label" style="width: 80px;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box" id="auth_otp_login_cooldown_box"
+                             invisible="not auth_otp_login_show_on_login">
+                            <div class="o_setting_right_pane">
+                                <label for="auth_otp_login_resend_cooldown_seconds" string="Resend Cooldown"/>
+                                <div class="text-muted">
+                                    Minimum time a user must wait before requesting
+                                    another code to be sent.
+                                </div>
+                                <div class="content-group">
+                                    <field name="auth_otp_login_resend_cooldown_seconds" class="o_light_label" style="width: 80px;"/>
+                                    <span> seconds</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_auth_otp_login_config_settings" model="ir.actions.act_window">
+        <field name="name">Login with OTP</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'auth_otp_login'}</field>
+    </record>
+
+</odoo>

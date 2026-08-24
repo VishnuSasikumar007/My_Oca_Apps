@@ -1,0 +1,163 @@
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12 text-center">
+            <h2>
+                Auth OTP Login (with Email)
+            </h2>
+            <p class="oe_mt16 lead">
+                Let users log in with a one-time code sent to their email,
+                no password required.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Overview Section -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <ul class="oe_features_list text-start mx-auto">
+                <li>Adds a passwordless "Log in with a code by email" option to the login page</li>
+                <li>Emails a secure, time-limited one-time code to the user</li>
+                <li>Live expiry countdown with automatic expired-code warning</li>
+                <li>Resend cooldown timer to prevent repeated code requests</li>
+                <li>Max attempts protection against brute-force code guessing</li>
+                <li>Show or hide the option from the login page anytime, from Settings</li>
+                <li>Fully compatible with the standard Odoo login workflow</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Step 1 -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Step 1</h3>
+            <p>From the login page, click <b>Log in with a code by email</b>.</p>
+            <img src="login_link.png" class="oe_picture oe_screenshot" alt="Login page with OTP link"/>
+        </div>
+    </div>
+</section>
+
+<!-- Step 2 -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Step 2</h3>
+            <p>Enter your email address and request a code.</p>
+            <img src="request_code.png" class="oe_picture oe_screenshot" alt="Request OTP code"/>
+        </div>
+    </div>
+</section>
+
+<!-- Step 3 -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Step 3</h3>
+            <p>Enter the 6-digit code emailed to you to complete the login.</p>
+            <img src="verify_code.png" class="oe_picture oe_screenshot" alt="Verify OTP code"/>
+        </div>
+    </div>
+</section>
+
+<!-- Expiry Countdown -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Live Expiry Countdown</h3>
+            <p>
+                A live countdown shows exactly how long the code stays valid.
+                Once it hits zero, the code expires automatically and the
+                <b>Verify and log in</b> button is disabled until a new code
+                is requested.
+            </p>
+            <img src="expiry_countdown.png" class="oe_picture oe_screenshot" alt="OTP expiry countdown"/>
+        </div>
+    </div>
+</section>
+
+<!-- Expired Code Warning -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Expired Code Warning</h3>
+            <p>
+                If the code isn't entered in time, a clear "expired" state is
+                shown so the user immediately knows to request a new one
+                instead of guessing why login failed.
+            </p>
+            <img src="expired_warning.png" class="oe_picture oe_screenshot" alt="OTP expired warning"/>
+        </div>
+    </div>
+</section>
+
+<!-- Resend Cooldown -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Resend Cooldown</h3>
+            <p>
+                The <b>Resend code</b> button stays disabled with a live
+                countdown until the configured cooldown passes, preventing
+                repeated code requests and email spam.
+            </p>
+            <img src="resend_cooldown.png" class="oe_picture oe_screenshot" alt="OTP resend cooldown"/>
+        </div>
+    </div>
+</section>
+
+<!-- Max Attempts -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Max Attempts Protection</h3>
+            <p>
+                After too many incorrect codes, the current code is
+                invalidated and the user is asked to request a fresh one,
+                protecting against brute-force guessing.
+            </p>
+            <img src="max_attempts.png" class="oe_picture oe_screenshot" alt="OTP max attempts warning"/>
+        </div>
+    </div>
+</section>
+
+<!-- Settings -->
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h2>Settings</h2>
+            <p>
+                Configure everything from
+                <b>Settings &gt; General Settings &gt; Login with a code by Email</b>:
+            </p>
+            <ul class="oe_features_list text-start mx-auto">
+                <li>Show or hide the "Log in with a code by email" link on the login page</li>
+                <li>Code Validity — how many minutes an emailed code stays valid</li>
+                <li>Max Attempts — how many wrong tries are allowed before the code is invalidated</li>
+                <li>Resend Cooldown — how many seconds before a new code can be requested</li>
+            </ul>
+            <p class="text-muted">
+                Turning the login link off hides it from the login page while
+                keeping the OTP flow itself intact for anyone with the direct link.
+            </p>
+            <img src="settings.png" class="oe_picture oe_screenshot" alt="Auth OTP Login settings"/>
+        </div>
+    </div>
+</section>
+
+<!-- Support Section -->
+<section class="oe_container">
+    <div class="oe_row oe_spaced text-center">
+        <div class="oe_span12">
+            <h3>Need Support?</h3>
+            <p>Feel free to reach out anytime.</p>
+            <p>
+                <a href="mailto:vishnu.sit2015@gmail.com">vishnu.sit2015@gmail.com</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_separator"></section>

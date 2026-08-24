@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Adds a link to the standard login page. The xpath below targets
+        the button-wrapper class used by the stock `web.login` template
+        in recent versions - if your instance customized that template
+        (a theme, another module, etc.), open Settings > Technical >
+        Views > "Login" in debug mode to confirm the right anchor and
+        adjust the xpath expr accordingly.
+    -->
+    <template id="login_otp_link" name="OTP link on login page" inherit_id="web.login">
+        <xpath expr="//div[hasclass('oe_login_buttons')]" position="inside">
+            <t t-set="auth_otp_login_show_on_login"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('auth_otp_login.show_on_login', 'True') == 'True'"/>
+            <a t-if="auth_otp_login_show_on_login"
+               class="btn btn-link w-100 mt-1" href="/web/login_otp">
+                Log in with a code by email
+            </a>
+        </xpath>
+    </template>
+
+    <!-- ================================================================ -->
+    <!-- Step 1: ask for the login/email                                   -->
+    <!-- ================================================================ -->
+    <template id="login_otp_request" name="Login with OTP - Request Code">
+        <t t-call="web.login_layout">
+            <t t-set="title">Login with a code</t>
+
+            <div class="o_otp_card">
+                <div class="o_otp_card__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path d="M3 7l9 6 9-6"/>
+                    </svg>
+                </div>
+                <div class="o_otp_card__title">Log in with a code</div>
+                <div class="o_otp_card__subtitle">
+                    Enter your login or email. We'll send a one-time code to sign you in
+                    without a password.
+                </div>
+
+                <div t-if="error" class="alert alert-danger py-2" role="alert" t-esc="error"/>
+
+                <form class="oe_login_form" role="form" action="/web/login_otp" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+
+                    <div class="form-group field-login mb-3">
+                        <label for="login" class="form-label">Email or login</label>
+                        <input type="email"
+                               name="email"
+                               id="email"
+                               class="form-control"
+                               placeholder="Enter your email"
+                               t-att-value="email"
+                               autofocus="autofocus"
+                               required="required"
+                               autocomplete="email"/>
+                    </div>
+
+                    <div class="o_otp_actions">
+                        <button type="submit" class="btn btn-primary w-100">Send code</button>
+                    </div>
+                </form>
+
+                <div class="o_otp_footer_link">
+                    <a href="/web/login">Use your password instead</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ================================================================ -->
+    <!-- Step 2: enter the code                                            -->
+    <!-- ================================================================ -->
+    <template id="login_otp_verify" name="Login with OTP - Verify Code">
+        <t t-call="web.login_layout">
+            <t t-set="title">Enter your code</t>
+
+            <div class="o_otp_card">
+                <div class="o_otp_card__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="11" width="14" height="10" rx="2"/>
+                        <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+                    </svg>
+                </div>
+                <div class="o_otp_card__title">Enter your code</div>
+                <div class="o_otp_card__subtitle">
+                    We've emailed a 6-digit code to <strong t-esc="email"/>. It's valid for
+                    <span class="o_otp_expiry" id="otp_expiry_badge">
+                        <span id="otp_countdown">--:--</span>
+                    </span>.
+                </div>
+
+                <div t-if="error" class="alert alert-danger py-2" role="alert" t-esc="error"/>
+                <div t-if="info" class="alert alert-info py-2" role="alert" t-esc="info"/>
+
+                <form class="oe_login_form" role="form" action="/web/login_otp/verify"
+                      method="post" id="otp_verify_form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="email" t-att-value="email"/>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <input type="hidden" name="action" value="verify"/>
+                    <input type="hidden" name="code" id="otp_code_hidden"/>
+
+                    <div class="o_otp_digits" role="group" aria-label="6-digit code">
+                        <input type="text" inputmode="numeric" maxlength="1"
+                               t-foreach="range(6)" t-as="digit_index"
+                               t-att-data-idx="digit_index"
+                               t-att-autofocus="'autofocus' if digit_index == 0 else None"
+                               aria-label="Digit"/>
+                    </div>
+
+                    <div class="o_otp_actions">
+                        <button type="submit" id="otp_submit_btn" class="btn btn-primary w-100">
+                            Verify and log in
+                        </button>
+                    </div>
+                </form>
+
+                <form action="/web/login_otp/verify" method="post" class="mt-2">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="email" t-att-value="email"/>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <input type="hidden" name="action" value="resend"/>
+                    <button type="submit" id="otp_resend_btn" class="btn btn-link w-100" disabled="disabled">
+                        Resend code
+                    </button>
+                </form>
+
+                <div class="o_otp_footer_link">
+                    <a href="/web/login">Use your password instead</a>
+                </div>
+            </div>
+
+            <script t-attf-type="text/javascript">
+                (function () {
+                    var expiresIn = <t t-esc="validity_seconds"/>;
+                    var resendIn = <t t-esc="resend_cooldown_seconds"/>;
+
+                    var countdownEl = document.getElementById("otp_countdown");
+                    var expiryBadge = document.getElementById("otp_expiry_badge");
+                    var submitBtn = document.getElementById("otp_submit_btn");
+                    var resendBtn = document.getElementById("otp_resend_btn");
+                    var resendLabel = resendBtn.textContent.trim();
+
+                    function formatTime(totalSeconds) {
+                        var m = Math.floor(totalSeconds / 60);
+                        var s = totalSeconds % 60;
+                        return (m &lt; 5 ? "0" : "") + m + ":" + (s &lt; 5 ? "0" : "") + s;
+                    }
+
+                    var expiryTimer = setInterval(function () {
+                        expiresIn -= 1;
+                        if (expiresIn &lt;= 0) {
+                            clearInterval(expiryTimer);
+                            countdownEl.textContent = "expired";
+                            expiryBadge.classList.add("o_otp_expiry--expired");
+                            submitBtn.disabled = true;
+                            return;
+                        }
+                        countdownEl.textContent = formatTime(expiresIn);
+                    }, 1000);
+                    countdownEl.textContent = expiresIn &gt; 0 ? formatTime(expiresIn) : "expired";
+                    if (expiresIn &lt;= 0) {
+                        expiryBadge.classList.add("o_otp_expiry--expired");
+                        submitBtn.disabled = true;
+                    }
+
+                    var resendTimer = setInterval(function () {
+                        resendIn -= 1;
+                        if (resendIn &lt;= 0) {
+                            clearInterval(resendTimer);
+                            resendBtn.disabled = false;
+                            resendBtn.textContent = resendLabel;
+                            return;
+                        }
+                        resendBtn.textContent = resendLabel + " (" + resendIn + "s)";
+                    }, 1000);
+                    if (resendIn &gt; 0) {
+                        resendBtn.textContent = resendLabel + " (" + resendIn + "s)";
+                    } else {
+                        resendBtn.disabled = false;
+                    }
+
+                    // --- 6-box code input, kept in sync with the hidden field ---
+                    var boxes = Array.prototype.slice.call(
+                        document.querySelectorAll(".o_otp_digits input")
+                    );
+                    var hidden = document.getElementById("otp_code_hidden");
+                    var form = document.getElementById("otp_verify_form");
+
+                    function syncHidden() {
+                        hidden.value = boxes.map(function (b) { return b.value; }).join("");
+                    }
+
+                    boxes.forEach(function (box, i) {
+                        box.addEventListener("input", function () {
+                            box.value = box.value.replace(/[^0-9]/g, "").slice(0, 1);
+                            box.classList.remove("is-invalid");
+                            if (box.value &amp;&amp; boxes[i + 1]) {
+                                boxes[i + 1].focus();
+                            }
+                            syncHidden();
+                        });
+
+                        box.addEventListener("keydown", function (ev) {
+                            if (ev.key === "Backspace" &amp;&amp; !box.value &amp;&amp; boxes[i - 1]) {
+                                boxes[i - 1].focus();
+                            }
+                        });
+
+                        box.addEventListener("paste", function (ev) {
+                            var text = (ev.clipboardData || window.clipboardData)
+                                .getData("text").replace(/[^0-9]/g, "");
+                            if (!text) {
+                                return;
+                            }
+                            ev.preventDefault();
+                            text.slice(0, boxes.length).split("").forEach(function (ch, j) {
+                                if (boxes[i + j]) {
+                                    boxes[i + j].value = ch;
+                                }
+                            });
+                            var next = boxes[Math.min(i + text.length, boxes.length - 1)];
+                            next.focus();
+                            syncHidden();
+                        });
+                    });
+
+                    form.addEventListener("submit", function () {
+                        syncHidden();
+                        if (hidden.value.length &lt; boxes.length) {
+                            boxes.forEach(function (b) { b.classList.add("is-invalid"); });
+                        }
+                    });
+
+                    if (boxes[0]) {
+                        boxes[0].focus();
+                    }
+                })();
+            </script>
+        </t>
+    </template>
+
+</odoo>
