@@ -55,7 +55,7 @@ Ideal for businesses that require strict stock control and want to avoid oversel
 
     'images': ['static/description/banner.png'],
     'license': "LGPL-3",
-    'price': 10.0,
+    'price': 20.00,
     'currency': 'USD',
 
     'installable': True,
